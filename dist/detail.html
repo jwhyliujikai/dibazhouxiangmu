@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/detail.css"/>
+		<script src="js/cookie.js" type="text/javascript" charset="utf-8"></script>
+<!--		<script src="js/cart.js" type="text/javascript" charset="utf-8"></script>-->
+		<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<a href="index.html">首页</a>
+		<a href="productList.html">列表页面</a>
+		<a href="cartList.html">点击进入购物车</a>
+		<div id="detail">
+			
+		</div>
+		<script type="text/javascript">
+		$(function(){
+			var id = location.search.split("=")[1];
+			console.log(id)
+			$.get("http://47.104.244.134:8080/goodsbyid.do",{id:id}).done(data=>{
+				console.log(data);
+				
+				var oDetail = document.getElementById("detail");
+				oDetail.innerHTML = `
+				<div class="midArea">
+				<img src="${data.picurl}"/>
+				<div class="zoom"></div>
+				<div class="bigArea">
+				<img src="${data.picurl}"/>
+				</div>
+				</div>				
+				<p>名称:${data.name}</p>
+				<p>价格:${data.price}</p>
+				<p>评分:${data.star}</p>
+				<p>
+				<span class="minues">-</span>
+				<input type="text" value="1" class="num"/>
+				<span class="add">+</span>
+				<input class="detalBtn" data-id = id type = "button" value = "添加购物车"/>	
+				
+				</p>`
+				$(".minues").click(function(){
+					var numVal = $(".num").val();
+					$(".num").val(numVal - 1)
+					if(numVal<=1){
+						console.log("aaa")
+						$(".num").val(1);
+					}
+				})
+				$(".add").click(function(){
+					var numVal = $(".num").val();	
+						$(".num").val(parseInt(numVal) + 1) 	
+				})
+				$(".detalBtn").click(function(){
+					if(localStorage.getItem("token")==null){
+						alert("请先登录");
+						window.location.href="login.html";
+					}else{
+						for(var i=0;i<parseInt($(".num").val());i++){
+							addCart();
+						}
+						
+					}
+				})
+				function addCart(){
+					var token = localStorage.getItem("token");
+					$.get("http://47.104.244.134:8080/cartsave.do",{
+						gid:id,
+						token:token}).done(data=>{
+							
+						})
+				}
+				//放大镜：
+				$(".midArea").mouseover(function(){
+					$(".zoom").css({"display":"block"});
+					$(".bigArea").css({"display":"block"});	
+				})
+				$(".midArea").mouseout(function(){
+					$(".zoom").css({"display":"none"});
+					$(".bigArea").css({"display":"none"});
+				})
+				$(".midArea").mousemove(function(event){
+					//减去margin值
+					var x = event.pageX - $(".zoom").get(0).offsetWidth/2 - 30;
+					var y = event.pageY - $(".zoom").get(0).offsetHeight/2;
+					var maxWid = $(".midArea").width()-$(".zoom").width();
+					var maxHei = $(".midArea").height() - $(".zoom").height();
+					x = x<0?0 : x>maxWid?maxWid : x;
+					y = y<0?0 : y>maxHei?maxHei :y;
+					$(".zoom").css({"left":x+"px","top":y+"px"});
+					$(".midArea img").css({"left":-x/$('.midArea img').width()*$(".bigArea").width()+"px"})
+					$(".midArea img").css({"top":-y/$(".midArea").height()*$(".bigArea img").height()})
+				})				
+			})	
+		})	
+		</script>
+		
+	</body>
+</html>

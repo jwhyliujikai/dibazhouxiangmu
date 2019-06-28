@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<link rel="stylesheet" type="text/css" href="css/cartList.css"/>
+	<script src="js/cart.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/cookie.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+	<body>
+		<div id="port">
+			<a href="index.html">首页</a>
+			<a href="productList.html">列表页面</a>
+			<a href="register.html">注册页面</a>
+			<a href="login.html">登录页面</a>
+		</div>
+		
+		<div class="cartNav">
+			<span>商品</span>
+			<span>名称</span>
+			<span>单价</span>
+			<span>数量</span>
+			<span>总价</span>
+		</div>
+		<div class="cartShow">
+			<ul id="cartList">			
+		</ul>
+		<div class="jiage">
+		<span>总价:</span>
+		<span id="countPrice">
+			0
+		</span>
+		</div>
+		
+		</div>
+		
+		<script type="text/javascript">
+			window.onload = function(){
+			var token = localStorage.getItem("token");
+			var oCartList = document.getElementById("cartList");
+			$.get("http://47.104.244.134:8080/cartlist.do",{token:token}).done(data=>{
+				var str = "";
+				for(var i=0;i<data.length;i++){
+						str += `
+						
+						<li data-id = "${data[i].id}" data-gid="${data[i].gid}" goods = "${data[i].goods}" count = "${data[i].count}">
+						<input class="chek" type="checkbox" />
+						<img src="${data[i].goods.picurl}"/>
+						<p>${data[i].goods.name}</p>
+						<p class="price">${data[i].goods.price}</p>
+						<p class="nan">
+						<span class="munes">-</span>
+						<input class="num" type="text" value=${data[i].count} />
+						<span class="argument">+</span>
+						
+						<span class="counts">${data[i].count*data[i].goods.price}</span>
+						<span class="del" >删除</span>
+						</p>
+						</li>
+										`						
+				}	
+			
+				oCartList.innerHTML = str;
+					//console.log($(".num"))
+				var munes = document.querySelectorAll(".munes");	
+				var num = document.querySelectorAll(".num"); 
+				var argument = document.querySelectorAll(".argument");
+				var Del = document.getElementsByClassName("del")
+				//console.log(argument)
+					for(let i=0;i<munes.length;i++){
+						//点击减按钮：
+						munes[i].onclick = function(){
+							//console.log("aa")
+							num[i].value--;
+							if(num[i].value<=1){
+								num[i].value=1;
+							}
+							var id = this.parentNode.parentNode.getAttribute("data-id")
+					var gid = this.parentNode.parentNode.getAttribute("data-gid")
+				if($(".num").eq(i).val()>=1){
+					$.get("http://47.104.244.134:8080/cartupdate.do",{
+						id:id,
+						gid:gid,
+						num:-1,
+						token:token
+					}).done(data=>{
+				console.log(data);
+			})
+					$("#countPrice").text(getPrice())
+					//$(".counts").eq(i).text($(".price").eq(i).text()*$(".num").eq(i).val());
+					}else{
+						return false;
+					}
+		
+					
+						}
+						//点击加按钮	
+				argument[i].onclick = function(){
+						num[i].value++;		
+						var id = this.parentNode.parentNode.getAttribute("data-id")
+					var gid = this.parentNode.parentNode.getAttribute("data-gid")
+					$.get("http://47.104.244.134:8080/cartupdate.do",{
+									id:id,
+									gid:gid,
+									num:1,
+									token:token
+								}).done(data=>{
+
+							$("#countPrice").text(getPrice())
+						})
+								
+						//$(".counts").eq(i).text($(".price").eq(i).text()*$(".num").eq(i).val());			
+					}
+					//删除：
+					Del[i].onclick = function(){
+						console.log(i)
+						var id = this.parentNode.parentNode.getAttribute("data-id")
+					var gid = this.parentNode.parentNode.getAttribute("data-gid")
+					$.get("http://47.104.244.134:8080/cartupdate.do",{
+									id:id,
+									gid:gid,
+									num:0,
+									token:token
+								}).done(data=>{
+							console.log(data);
+				
+						})
+/*oCartList.remove(this.parentNode.parentNode)
+window.location.reload()		*/						 			$(this).parent().parent().remove();							
+					}
+							
+				}
+					//勾选总计实时更新：
+					function getPrice(){
+						var num = document.querySelectorAll(".num");
+						var price = document.querySelectorAll(".price");
+						var counts = document.querySelectorAll(".counts");
+						var Chek = document.getElementsByClassName("chek");
+						for(var i=0;i<counts.length;i++){
+							counts[i].innerText = num[i].value*price[i].innerText;
+						}
+						var totals = 0;
+						for(var j=0;j<Chek.length;j++){
+							if(Chek[j].checked){
+								totals += parseInt(counts[j].innerText)
+							}
+						}
+						return totals;
+					}
+					
+					$(".chek").click(function(){
+						//getPrice();
+						$("#countPrice").text(getPrice())
+					})
+
+					/*<input class="gouxuan" type="checkbox" />
+						<img src="${data[i].goods.picurl}"/>
+						<p>${data[i].goods.name}</p>
+						<p class="price">${data[i].goods.price}</p>
+						<p class="nan">
+						<span class="munes">-</span>
+						<input class="num" type="text" value=${data[i].count} />
+						<span class="argument">+</span>
+						
+						<span class="counts">${data[i].count*data[i].goods.price}</span>
+						<span class="del" >删除</span>
+						</p>*/
+					
+					//定义函数：
+					/*function getPrice(){
+						//$(".gouxuan").click(function(){
+						$(".counts").eq(i).text($(".price").eq(i).text()*$(".num").eq(i).val());		
+						var totals = 0;
+						$("input:checked").each(function(){
+							console.log($(this).find(".nan"))
+							totals = 
+							//totals += parseInt($(this).parent().children(".nan").children(".counts").text())
+						})
+						//$("#countPrice").text(totals);
+					//})	
+					return totals;
+				}*/
+					
+			});	
+		}
+			
+		</script>
+	</body>
+</html>

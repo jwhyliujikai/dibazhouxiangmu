@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{margin: 0;padding: 0;}
+			li{list-style: none;}
+			a{text-decoration: none;}
+			img{
+				display: block;
+				border: none;
+			}
+			
+		</style>
+		<link rel="stylesheet" type="text/css" href="css/common.css"/>
+		<link rel="stylesheet" type="text/css" href="css/login.css"/>
+		<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/cookie.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/login.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="nav">
+			<div class="reg-nav">
+			<ul class="ul-left">
+				<li><a href="#">母婴之家</a></li>
+				<li><a href="#">我要开店</a></li>
+				<li><a href="#">手机版</a><span></span></li>
+			</ul>
+			<ul class="ul-right">
+				<li>
+					<span >欢迎来到母婴之家</span>
+					<a href="login.html">[登录]</a>
+					<a href="register.html">[免费注册]</a>&nbsp;&nbsp;&nbsp;|
+				</li>
+				<li><a href="#">我的订单</a>&nbsp;&nbsp;&nbsp;|</li>
+				<li><a href="#">客户服务</a> &nbsp;&nbsp;&nbsp;|</li>
+				<li><a href="#">商务合作</a>&nbsp;&nbsp;&nbsp;|</li>
+				<li><a href="#">网站导航</a></li>
+			</ul>
+		</div>
+		</div>
+		<div class="wrapper-head">
+			<div class="logo">
+				<a href="index.html">
+					点击进入首页：
+					<img src="img/1.png"/>
+				</a>
+			</div>
+			
+		</div>
+		
+		<!--注册-->
+		<div class="wrapper">			
+			<div class="wrapper-reg">
+				<ul>
+					<li class="zhuce"><a class="wrap-a" href="register.html"><span></span>注册</a></li>
+					<li><a class="wrap-a"  href="#"><span></span>登录</a></li>
+				</ul>
+				<div class="register">	
+					<div class="register-l">
+						<img src="img/app.jpg"/>												
+					</div>
+					<div class="register-r">
+						<ul id="login">
+							<li>
+							<label class="label">用户名：</label>
+								<div class="inputCot inp-cot">
+									<input class="g-ipt-err" id="cell" type="text" placeholder="请输入手机号" />
+								</div>
+								
+							</li>
+							<li>
+								<label class="label">请输入密码：</label>
+								<div class="inputCot">
+									<input class="g-ipt-err pwd" type="text" placeholder="请填入密码" />
+								</div>
+								
+							</li>
+							<li>
+								<label class="label"></label>
+								<div class="inputCot">
+									<input type="checkbox"  id="argument" class="checked"/>
+									
+									<label class="argu-lab">
+										<p class="argu-txt">
+											记住我（30天内免登陆）
+											<a id="argu-a" href="#">“忘记密码”</a>
+										</p>
+										
+									</label>																			
+								</div>
+								
+							</li>
+							<li>
+								<label class="label"></label>
+								<div class="inputCot">
+									<div class="emailTip 
+protocol">
+										<p class="txt-err">用户名或密码不正确，请重新输入</p>
+									</div>
+									<input class="reg-sub enter" type="submit" value=""/>
+									
+								</div>
+								
+							</li>
+						</ul>
+					</div>
+						
+				</div>	
+			</div>	
+		</div>		
+		
+	</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/cookie.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/productList.css"/>
+	</head>
+	<body>
+		<div id="navlist">
+			<a href="index.html">首页</a>
+			<a href="cartList.html">点击进入购物车</a>
+			<a href="register.html">注册</a>
+			<a href="login.html">登录</a>
+		</div>
+		
+		<ul id="list">						
+		</ul>	
+		
+		<script type="text/javascript">
+			$(function(){
+				var oList = document.getElementById("list");
+			//调数据接口：
+				$.get("http://47.104.244.134:8080/goodsbytid.do",{
+					tid:13,
+					page:1,
+					limit:10
+				}).done(data=>{
+					console.log(data);
+					var data = data.data;
+					console.log(data)
+					var str = "";
+					for(var i=0;i<data.length;i++){
+						var id = data[i].id
+						console.log(id)
+						str +=`<li >
+						<a href="detail.html?id=${data[i].id}" >
+						<img src = "${data[i].picurl}">
+						</a>
+						<p>价格：${data[i].price}</p>
+						<p>名称：${data[i].name}</p>
+						<p>评价：${data[i].star}</p>
+						<input type = "button" data-id = "${data[i].id}" value = "添加购物车"/>
+						</li>`										
+					}
+					oList.innerHTML = str;
+					//给每一个addBtn添加点击事件：对addBtn进行遍历
+					var aInput = document.querySelectorAll("input");
+					//var cart = new Cart();
+					for(let i=0;i<aInput.length;i++){
+						aInput[i].onclick = function(){
+							if(localStorage.getItem("token")==null){
+								alert("请先登录");
+						window.location.href="login.html"
+							}else{
+								var id = this.getAttribute("data-id");
+								var token = localStorage.getItem("token");
+								$.get("http://47.104.244.134:8080/cartsave.do",{gid:id,token:token}).done(data=>{
+				//console.log(data);
+			})																
+							}																					
+						}
+					}
+				})
+			
+			})
+		</script>
+	</body>
+</html>
